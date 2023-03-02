@@ -20,6 +20,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\unknown-error.wav" />
+    <EmbeddedResource Include="Resources\vv-notfound.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="TTSEngineLib">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>0</VersionMinor>
@@ -33,5 +38,6 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
   </ItemGroup>
 </Project>

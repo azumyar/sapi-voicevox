@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using TTSEngineLib;
+
 namespace Yarukizero.Net.Sapi.VoiceVox;
 
 internal static class GuidConst {
@@ -129,7 +130,6 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 
 	private static readonly string KeyVoiceVoxEndPoint = "x-voicevox";
 	private static readonly string KeyVoiceVoxSpeakerId = "x-voicevox-speaker";
-	private static readonly string KeyVoiceVoxSpeakerSpeed = "x-voicevox-speaker-speed";
 	private static readonly string KeyVoiceVoxSpeakerPitch = "x-voicevox-speaker-pitch";
 	private static readonly string KeyVoiceVoxSpeakerIntonation = "x-voicevox-speaker-intonation";
 	private static readonly string KeyVoiceVoxSpeakerVolume = "x-voicevox-speaker-volume";
@@ -148,7 +148,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 	private double voicevoxSpeakerVolumeScale = DefaultVoicevoxSpeakerVolumeScale;
 	private int voicevoxSpeakerOutputSamplingRate = 44100;
 	private bool voicevoxSpeakerOutputStereo = false;
-	//private System.Media.SoundPlayer? player = null;
+	private System.Media.SoundPlayer? player = null;
 
 	public void Speak(uint dwSpeakFlags, ref Guid rguidFormatId, ref WAVEFORMATEX pWaveFormatEx, ref SPVTEXTFRAG pTextFragList, ISpTTSEngineSite pOutputSite) {
 		static uint output(ISpTTSEngineSite output, byte[] data) {
@@ -169,6 +169,15 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 					Marshal.FreeCoTaskMem(pWavData);
 				}
 			}
+		}
+		void play(string resourceName) {
+			if(this.player == null) {
+				this.player = new System.Media.SoundPlayer();
+			}
+			player.Stream = typeof(VoiceVoxTTSEngine)
+				.Assembly
+				.GetManifestResourceStream(resourceName);
+			player.Play();
 		}
 
 		if(rguidFormatId == SPDFID_Text) {
@@ -212,6 +221,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 					text,
 					optSpeed,
 					pOutputSite,
+					play,
 					output);
 
 			next:
@@ -223,7 +233,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 			}
 		}
 		catch {
-			//play($"{typeof(VoiceVoxTTSEngine).Namespace}.Resources.unknown-error.wav");
+			play($"{typeof(VoiceVoxTTSEngine).Namespace}.Resources.unknown-error.wav");
 			throw;
 		}
 	}
@@ -233,6 +243,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 		string text,
 		double speed,
 		ISpTTSEngineSite pOutputSite,
+		Action<string> play,
 		Func<ISpTTSEngineSite, byte[], uint> output) {
 
 		try {
@@ -291,7 +302,11 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 				return output(pOutputSite, ms.ToArray());
 			}
 		}
-		catch(Exception e) {
+		catch(AggregateException) { // VOICEVOXと通信できないので空を返す
+			play($"{typeof(VoiceVoxTTSEngine).Namespace}.Resources.vv-notfound.wav");
+			return output(pOutputSite, new byte[4]);
+		}
+		catch(Exception) {
 			throw;
 		}
 	}
