@@ -130,10 +130,12 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 
 	private static readonly string KeyVoiceVoxEndPoint = "x-voicevox";
 	private static readonly string KeyVoiceVoxSpeakerId = "x-voicevox-speaker";
+	private static readonly string KeyVoiceVoxSpeakerSpeed = "x-voicevox-speaker-speed";
 	private static readonly string KeyVoiceVoxSpeakerPitch = "x-voicevox-speaker-pitch";
 	private static readonly string KeyVoiceVoxSpeakerIntonation = "x-voicevox-speaker-intonation";
 	private static readonly string KeyVoiceVoxSpeakerVolume = "x-voicevox-speaker-volume";
 
+	private static readonly double DefaultVoicevoxSpeakerSpeedScale = 1;
 	private static readonly double DefaultVoicevoxSpeakerPitchScale = 0;
 	private static readonly double DefaultVoicevoxSpeakerIntonationScale = 1;
 	private static readonly double DefaultVoicevoxSpeakerVolumeScale = 1;
@@ -143,6 +145,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 	private ISpObjectToken? token;
 	private string voicevoxEndPoint = "http://127.0.0.1:50021";
 	private string voicevoxSpeakerId = "1";
+	private double voicevoxSpeakerSpeedScale = DefaultVoicevoxSpeakerSpeedScale;
 	private double voicevoxSpeakerPitchScale = DefaultVoicevoxSpeakerPitchScale;
 	private double voicevoxSpeakerIntonationScale = DefaultVoicevoxSpeakerIntonationScale;
 	private double voicevoxSpeakerVolumeScale = DefaultVoicevoxSpeakerVolumeScale;
@@ -184,12 +187,12 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 			return;
 		}
 
+		/*
 		var optSpeed = 1d;
 		{
 			pOutputSite.GetRate(out var spd);
 			optSpeed = Math.Max(Math.Min(1d, spd / 10d), -1d) + 1;
 		}
-		/*
 		var volume = 1f;
 		{
 			pOutputSite.GetVolume(out var vol);
@@ -219,7 +222,6 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 
 				writtenWavLength += Speak(
 					text,
-					optSpeed,
 					pOutputSite,
 					play,
 					output);
@@ -241,7 +243,6 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 
 	private uint Speak(
 		string text,
-		double speed,
 		ISpTTSEngineSite pOutputSite,
 		Action<string> play,
 		Func<ISpTTSEngineSite, byte[], uint> output) {
@@ -267,7 +268,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 				}
 			}
 
-			json.SpeedScale = speed;
+			json.SpeedScale = this.voicevoxSpeakerSpeedScale;
 			json.PitchScale = this.voicevoxSpeakerPitchScale;
 			json.IntonationScale = this.voicevoxSpeakerIntonationScale;
 			json.VolumeScale = this.voicevoxSpeakerVolumeScale;
@@ -380,6 +381,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 		this.token = pToken;
 		this.voicevoxEndPoint = get(KeyVoiceVoxEndPoint);
 		this.voicevoxSpeakerId = get(KeyVoiceVoxSpeakerId);
+		this.voicevoxSpeakerSpeedScale = @double(get(KeyVoiceVoxSpeakerSpeed), DefaultVoicevoxSpeakerSpeedScale);
 		this.voicevoxSpeakerPitchScale = @double(get(KeyVoiceVoxSpeakerPitch), DefaultVoicevoxSpeakerPitchScale);
 		this.voicevoxSpeakerIntonationScale = @double(get(KeyVoiceVoxSpeakerIntonation), DefaultVoicevoxSpeakerIntonationScale);
 		this.voicevoxSpeakerVolumeScale = @double(get(KeyVoiceVoxSpeakerVolume), DefaultVoicevoxSpeakerVolumeScale);
@@ -422,6 +424,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 				registryKey.SetValue("CLSID", $"{{{GuidConst.ClassGuid}}}");
 				registryKey.SetValue(KeyVoiceVoxEndPoint, "http://127.0.0.1:50021");
 				registryKey.SetValue(KeyVoiceVoxSpeakerId, $"{it.Id}");
+				registryKey.SetValue(KeyVoiceVoxSpeakerSpeed, $"{DefaultVoicevoxSpeakerSpeedScale:F2}");
 				registryKey.SetValue(KeyVoiceVoxSpeakerPitch, $"{DefaultVoicevoxSpeakerPitchScale:F2}");
 				registryKey.SetValue(KeyVoiceVoxSpeakerIntonation, $"{DefaultVoicevoxSpeakerIntonationScale:F2}");
 				registryKey.SetValue(KeyVoiceVoxSpeakerVolume, $"{DefaultVoicevoxSpeakerVolumeScale:F2}");
