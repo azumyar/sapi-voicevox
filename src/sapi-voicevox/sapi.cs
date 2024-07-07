@@ -134,13 +134,13 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 	private static readonly string KeyVoiceVoxSpeakerPitch = "x-voicevox-speaker-pitch";
 	private static readonly string KeyVoiceVoxSpeakerIntonation = "x-voicevox-speaker-intonation";
 	private static readonly string KeyVoiceVoxSpeakerVolume = "x-voicevox-speaker-volume";
+	private static readonly string KeyConvertKana = "x-kana";
 
 	private static readonly double DefaultVoicevoxSpeakerSpeedScale = 1;
 	private static readonly double DefaultVoicevoxSpeakerPitchScale = 0;
 	private static readonly double DefaultVoicevoxSpeakerIntonationScale = 1;
 	private static readonly double DefaultVoicevoxSpeakerVolumeScale = 1;
-
-
+	private static readonly int DefaultConvertKana = 1;
 
 	private ISpObjectToken? token;
 	private string voicevoxEndPoint = "http://127.0.0.1:50021";
@@ -151,6 +151,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 	private double voicevoxSpeakerVolumeScale = DefaultVoicevoxSpeakerVolumeScale;
 	private int voicevoxSpeakerOutputSamplingRate = 44100;
 	private bool voicevoxSpeakerOutputStereo = false;
+	private string? convertKana = null;
 	private System.Media.SoundPlayer? player = null;
 
 	public void Speak(uint dwSpeakFlags, ref Guid rguidFormatId, ref WAVEFORMATEX pWaveFormatEx, ref SPVTEXTFRAG pTextFragList, ISpTTSEngineSite pOutputSite) {
@@ -217,6 +218,9 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 				}
 				if(((SPVESACTIONS)pOutputSite.GetActions()).HasFlag(SPVESACTIONS.SPVES_ABORT)) {
 					return;
+				}
+				if(this.convertKana == "1") {
+					text = English2Kana.Convert(text);
 				}
 				AddEventToSAPI(pOutputSite, currentTextList.pTextStart, text, writtenWavLength);
 
@@ -385,6 +389,13 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 		this.voicevoxSpeakerPitchScale = @double(get(KeyVoiceVoxSpeakerPitch), DefaultVoicevoxSpeakerPitchScale);
 		this.voicevoxSpeakerIntonationScale = @double(get(KeyVoiceVoxSpeakerIntonation), DefaultVoicevoxSpeakerIntonationScale);
 		this.voicevoxSpeakerVolumeScale = @double(get(KeyVoiceVoxSpeakerVolume), DefaultVoicevoxSpeakerVolumeScale);
+		this.convertKana = get(KeyConvertKana);
+
+		if(this.convertKana == "1" && !English2Kana.IsInited) {
+			var dir = Path.GetDirectoryName(typeof(VoiceVoxTTSEngine).Assembly.Location);
+			Lucene.Net.Configuration.ConfigurationSettings.GetConfigurationFactory().GetConfiguration()["kuromoji:data:dir"] = dir;
+			English2Kana.Init();
+		}
 	}
 
 
@@ -428,6 +439,7 @@ public class VoiceVoxTTSEngine : IVoiceVoxTTSEngine {
 				registryKey.SetValue(KeyVoiceVoxSpeakerPitch, $"{DefaultVoicevoxSpeakerPitchScale:F2}");
 				registryKey.SetValue(KeyVoiceVoxSpeakerIntonation, $"{DefaultVoicevoxSpeakerIntonationScale:F2}");
 				registryKey.SetValue(KeyVoiceVoxSpeakerVolume, $"{DefaultVoicevoxSpeakerVolumeScale:F2}");
+				registryKey.SetValue(KeyConvertKana, $"{DefaultConvertKana}");
 			}
 			using(var registryKey = Registry.LocalMachine.CreateSubKey($@"{entry}\{prefix}-{safePath(it.Name)}\Attributes")) {
 				registryKey.SetValue("Age", "Teen"); // ここはてきとー
