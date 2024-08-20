@@ -124,15 +124,15 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 					last = c3;
 					if((c1 == 't') && (c2 == 's') && (c3 == 'u')) {
 						r.Append("ツ");
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					}　else if((c1 == 'k') && (c2 == 'w') && (c3 == 'a')) {
 						r.Append("クヮ");
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'g') && (c2 == 'w') && (c3 == 'a')) {
 						r.Append("グヮ");
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					}
 
@@ -146,7 +146,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "キョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 's') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -157,7 +157,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ショ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'c') && (c2 == 'h') && boin(c3)) {
 						r.Append(c3 switch {
@@ -168,7 +168,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "チョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'c') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -179,7 +179,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "チョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 't') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -190,7 +190,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "チョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'n') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -201,7 +201,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ニョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'h') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -212,7 +212,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ヒョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'm') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -223,7 +223,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ミョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'r') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -234,7 +234,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "リョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'g') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -245,7 +245,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ギョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'd') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -256,7 +256,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ヂョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'b') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -267,7 +267,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ビョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					} else if((c1 == 'p') && (c2 == 'y') && boin(c3)) {
 						r.Append(c3 switch {
@@ -278,7 +278,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ピョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					}
 
@@ -292,7 +292,7 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "ショ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					}else if((c1 == 'c') && (c2 == 'h') && boin(c3)) {
 						r.Append(c3 switch {
@@ -303,24 +303,24 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 							'o' => "チョ",
 							_ => throw new InvalidOperationException(),
 						});
-						s.Skip(3);
+						s = s.Skip(3);
 						continue;
 					}
 
 					if((c1 == 'm') && (c2 == 'm') && boin(c3)) {
 						last = c1;
 						r.Append("ン");
-						s.Skip(1);
+						s = s.Skip(1);
 						continue;
 					} else if((c1 == 'm') && (c2 == 'b') && boin(c3)) {
 						last = c1;
 						r.Append("ン");
-						s.Skip(1);
+						s = s.Skip(1);
 						continue;
 					} else if((c1 == 'm') && (c2 == 'p') && boin(c3)) {
 						last = c1;
 						r.Append("ン");
-						s.Skip(1);
+						s = s.Skip(1);
 						continue;
 					}
 
