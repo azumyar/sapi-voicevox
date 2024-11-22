@@ -58,16 +58,25 @@ namespace Yarukizero.Net.Sapi.VoiceVox {
 
 			using var ts = new TokenStreamComponents(tokenizer, tokenizer).TokenStream;
 			ts.Reset();
+			var endOffset = 0;
 			while(ts.IncrementToken()) {
-				var term = ts.GetAttribute<ICharTermAttribute>();
-				if(Regex.Match(term.ToString(), "^[a-z]+$", RegexOptions.IgnoreCase).Success) {
-					var read = ts.AddAttribute<IReadingAttribute>().GetReading();
-					r.Append(read switch {
-						string v => v,
-						_ => kana(term.ToString()),
-					});
-				} else {
-					r.Append(term.ToString());
+				// オフセットを見て読んでいる場合破棄する
+				if(ts.HasAttribute<IOffsetAttribute>()
+					&&  ts.GetAttribute<IOffsetAttribute>() is IOffsetAttribute offset
+					&& endOffset <= offset.StartOffset) {
+
+					endOffset = offset.EndOffset;
+
+					var term = ts.GetAttribute<ICharTermAttribute>();
+					if(Regex.Match(term.ToString(), "^[a-z]+$", RegexOptions.IgnoreCase).Success) {
+						var read = ts.AddAttribute<IReadingAttribute>().GetReading();
+						r.Append(read switch {
+							string v => v,
+							_ => kana(term.ToString()),
+						});
+					} else {
+						r.Append(term.ToString());
+					}
 				}
 			}
 			return r.ToString();
